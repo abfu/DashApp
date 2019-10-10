@@ -10,6 +10,7 @@ from dash.dependencies import Input, Output, State
 # Load Data
 df = pd.read_csv('data/diamonds.csv', index_col=0)
 
+### SPAMSPAMSPAM
 
 # Generate table from data
 def generate_table(dataframe, max_rows=10):
