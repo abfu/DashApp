@@ -10,7 +10,6 @@ from dash.dependencies import Input, Output, State
 # Load Data
 df = pd.read_csv('data/diamonds.csv', index_col=0)
 
-### SPAMSPAMSPAM
 
 # Generate table from data
 def generate_table(dataframe, max_rows=10):
@@ -47,7 +46,7 @@ external_stylesheet = ['']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheet)
 
 # Define Layout
-app.layout = html.Div(children={
+app.layout = html.Div([
     html.H1(children='Dash App'),
     html.Div(children='''An APP in Dash'''),
     html.H4(children='Life Expectancy by GDP'),
@@ -61,30 +60,30 @@ app.layout = html.Div(children={
     # Markdown text
     dcc.Markdown(children='''
     *Can't display images in Markdown*
-    
+
     `<img src='assets/diamond.jpg'>`
-    
+
     But with an absolute path to the asset:
-    
+
     `html.Img(src=app.get_asset_url('assets/IMAGE.jpg')`
     '''
                  ),
     html.Img(src=app.get_asset_url('diamond.jpg'))
     # Custom dash_core_components graph
-})
+
+])
 
 
 @app.callback(
     Output('switch-table', 'children'),
     [Input('boolswitch', 'on')],
-    [State('switch-table', 'children')]
 )
 def update_output(on):
     if on is True:
         children = datatable_diamonds
     else:
         children = ''
-    return ['{}'.format('Collapse' if on is True else 'Uncollapse'), children]
+    return children
 
 
 # Run App
