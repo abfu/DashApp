@@ -7,20 +7,22 @@ import pandas as pd
 import plotly.graph_objects as go
 import dash_daq as daq
 import plotly.io as pio
+from statsmodels.tsa import arima_model
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
+from models import figure_model
 
-df = pd.read_csv('data/stockdata2.csv', index_col=0)
+df = pd.read_csv('data/stockdata2.csv', index_col=0, parse_dates=True)
+df.index = pd.to_datetime(df['Date'])
+
 
 # Define dash App
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
 
 
 # Define Layout
-
-
 def get_options(list):
     dict_list = []
-    stocknames = {}
     for i in list:
         dict_list.append({'label': i, 'value': i})
 
@@ -31,38 +33,73 @@ stocknames = {}
 for i in df['stock'].unique():
     stocknames[i] = i
 
-app.layout = html.Div([
-    html.H1('Stock Prices', style={'textAlign': 'center'}),
-    dcc.Dropdown(id='stockselector', options=get_options(df['stock'].unique()),
-                 multi=True, value=['AAPL'], style={'display': 'table', 'margin-left': 'auto',
-                                                    'margin-right': 'auto', 'width': '60%',
-                                                    'color': 'cadetBlue', 'background-color': '#002B36',
-                                                    'border-color': '#002B36'}
-                 ),
-    dcc.Dropdown(id='modelselector', options=get_options(['arima', 'arima2', 'arima3']),
-                 multi=True, value=['AAPL'], style={'display': 'table', 'margin-left': 'auto',
-                                                    'margin-right': 'auto', 'width': '60%',
-                                                    'color': 'cadetBlue', 'background-color': '#002B36',
-                                                    'border-color': '#002B36'}
-                 ),
+app.layout = html.Div(
+    children=[
+        html.Div(
+            className='row',
+            children=[
+                # Column for user controls
+                html.Div(
+                    className='four columns div-user-controls',
+                    children=[
+                        html.H2('DASH - STOCK PRICES'),
+                        html.P('''
+                        Visualizing time series'''
+                        ),
+                        # Dropdown for stock selection
+                        html.Div(
+                            className='div-for-dropdown',
+                            children=[
+                                dcc.Dropdown(id='stockselector', options=get_options(df['stock'].unique()),
+                                             multi=True, value=['AAPL']
+                                ),
+                            ],
+                        ),
+                        # Dropdown for model selection
+                        html.Div(
+                            className='div-for-dropdown',
+                            children=[
+                                dcc.Dropdown(id='modelselector', options=get_options(['30D', 'arima2', 'arima3']),
+                                             multi=False
+                                             ),
 
-    dcc.Graph(id='timeseries', config={'displayModeBar':False}),
-    dcc.Graph(id='change', config={'displayModeBar': False}, style={'hight': '25%'}),
-    dcc.Graph(id='model')
+                            ],
+                        ),
+
+                    ],
+                ),
+                html.Div(
+                    className='eight columns div-for-charts bg-grey',
+                    children=[
+                            dcc.Graph(id='model', config={'displayModeBar':False}),
+                            html.Div(
+                                className='text-padding',
+                                children=[
+                                    'Select Range',
+                                    dcc.RangeSlider(id='range', updatemode='mouseup',
+                                                   min=0, max=len(df) - 1, value=[0, len(df) - 1], allowCross=False),
+                                ],
+                            ),
+                            dcc.Graph(id='timeseries', config={'displayModeBar': False}),
+                            dcc.Graph(id='change', config={'displayModeBar': False}),
+                    ],
+                ),
+            ],
+        )
+    ]
+)
 
 
-
-], className='container')
-
-
+# Callback for timeseries price
 @app.callback(Output('timeseries', 'figure'),
-              [Input('stockselector', 'value')])
-def update_graph(selected_dropdown_value):
-    dropdown = get_options(df['stock'].unique())[1]
+              [Input('stockselector', 'value'),
+               Input('range', 'value')])
+def update_graph(selected_dropdown_value, value):
     trace1 = []
+    df_sub = df[value[0]:value[1]]
     for stock in selected_dropdown_value:
-        trace1.append(go.Scatter(x=df[df['stock'] == stock]['Date'],
-                                 y=df[df['stock'] == stock]['value'],
+        trace1.append(go.Scatter(x=df_sub[df_sub['stock'] == stock].index,
+                                 y=df_sub[df_sub['stock'] == stock]['value'],
                                  mode='lines',
                                  opacity=0.7,
                                  name=stock,
@@ -75,20 +112,26 @@ def update_graph(selected_dropdown_value):
                   template='plotly_dark',
                                paper_bgcolor='rgba(0, 0, 0, 0)',
                   plot_bgcolor='rgba(0, 0, 0, 0)',
-                  margin={'b': 0}
+                  margin={'b': 15},
+                  hovermode='x',
+                  autosize=True
             ),
 
               }
 
     return figure
 
+
+# Callback for timeseries daily change
 @app.callback(Output('change', 'figure'),
-              [Input('stockselector', 'value')])
-def update_change(selected_dropdown_value):
+              [Input('stockselector', 'value'),
+               Input('range', 'value'),])
+def update_change(selected_dropdown_value, value):
     trace1 = []
+    df_sub = df[value[0]:value[1]]
     for stock in selected_dropdown_value:
-        trace1.append(go.Scatter(x=df[df['stock'] == stock]['Date'],
-                                 y=df[df['stock'] == stock]['change'],
+        trace1.append(go.Scatter(x=df_sub[df_sub['stock'] == stock].index,
+                                 y=df_sub[df_sub['stock'] == stock]['change'],
                                  mode='lines',
                                  opacity=0.7,
                                  name=stock,
@@ -102,7 +145,8 @@ def update_change(selected_dropdown_value):
                   paper_bgcolor='rgba(0, 0, 0, 0)',
                   plot_bgcolor='rgba(0, 0, 0, 0)',
                   margin={'t': 50},
-                  height=250
+                  height=250,
+                  hovermode='x',
               ),
 
               }
@@ -110,29 +154,14 @@ def update_change(selected_dropdown_value):
     return figure
 
 
+# Callback from script
 @app.callback(Output('model', 'figure'),
               [Input('stockselector', 'value'),
-               Input('modelselector', 'value')])
-def update_model(selected_dropdown_value, selected_model):
-    trace1 = []
+               Input('modelselector', 'value'),
+               Input('range', 'value')])
+def update_model(selected_stock, selected_model, value):
+    return figure_model(selected_stock, selected_model, value, df=df)
 
-    for stock in selected_dropdown_value:
-        trace1.append(go.Scatter())
-
-    data = []
-    figure = {'data': data,
-              'layout': go.Layout(
-                  colorway=["#5E0DAC", '#FF4F00', '#375CB1', '#FF7400', '#FFF400', '#FF0056'],
-                  template='plotly_dark',
-                  paper_bgcolor='rgba(0, 0, 0, 0)',
-                  plot_bgcolor='rgba(0, 0, 0, 0)',
-                  margin={'t': 50},
-                  height=250
-              ),
-
-              }
-
-    return figure
 
 # Run App
 if __name__ == '__main__':
