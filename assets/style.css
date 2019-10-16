@@ -1,18 +1,18 @@
-/* Table of contents –––––––––––––––––––––––––––––––––––––––––––––––––– 
-Taken from https://codepen.io/chriddyp/pen/bWLwgP.css 
-- Grid 
+/* Table of contents ––––––––––––––––––––––––––––––––––––––––––––––––––
+Taken from https://codepen.io/chriddyp/pen/bWLwgP.css
+- Grid
 - Base Styles
- - Typography 
- - Links 
- - Buttons 
- - Forms 
- - Lists 
- - Code 
- - Tables 
- - Spacing 
- - Utilities 
- - Clearing 
- - Media Queries 
+ - Typography
+ - Links
+ - Buttons
+ - Forms
+ - Lists
+ - Code
+ - Tables
+ - Spacing
+ - Utilities
+ - Clearing
+ - Media Queries
  - Custom App CSS */
 
 
@@ -436,10 +436,10 @@ a {
   width: 100%;
 }
 #histogram {
-  flex-grow: 1 
+  flex-grow: 1
 }
 #map-graph {
-  flex-grow: 2 
+  flex-grow: 2
 }
 .mapboxgl-canvas, .mapboxgl-map {
   min-width: 100%;
@@ -464,33 +464,55 @@ a {
 .Select-control, .Select-menu-outer, .Select-multi-value-wrapper, .select-up, .is-open .Select-control {
   background-color: #1E1E1E;
   color: white;
-  
+
 }
 
-#bar-selector .Select-multi-value-wrapper{
+#selector .Select-multi-value-wrapper, .Select-menu-outer, .select-up, .is-open .Select-control{
   max-height: 82px;
   overflow-y: auto;
   margin: 0px 0px -3px 0px;
+  background: #1E1E1E;
+  background-color: #1E1E1E;
+}
+
+
+
+.Select-control, .Select-menu-outer, .Select-multi-value-wrapper, .select-up, .is-open .Select-control {
+  background-color: #1E1E1E;
+  color: #d8d8d8;
+
+}
+
+#modelselector .Select-control{
+  max-height: 82px;
+  overflow-y: auto;
+  margin: 0px 0px -3px 0px;
+  border: 0.5px solid #dbdbdb;
 }
 
 .Select-control{
-  border: 0.5px solid #dbdbdb44;
+  border: 0.5px solid #dbdbdb;
 }
 
 .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
   color: white;
+  background: #1E1E1E;
+  background-color: #1E1E1E;
 }
 ._dash-app-content {
   overflow-x: hidden;
   overflow-y: hidden;
   position: relative;
 }
-.has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label{
+.has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-labeln {
   color: #d8d8d8;
   font-weight: 400;
   font-size: 14px;
 }
 
+.Input.DateInput_1 {
+  background-color: #1e1e1e;
+}
 
 #date {
   background-color: #1e1e1e;
@@ -507,9 +529,11 @@ a {
 ._dash-undo-redo {
   display: none;
 }
+
 .DateInput.DateInput_1{
   width: 100%;
 }
+
 .SingleDatePickerInput__withBorder{
   border:none;
 }
@@ -524,10 +548,12 @@ a {
   background: #1e1e1e;
   background-color: #1e1e1e;
 }
+
 .SingleDatePickerInput.SingleDatePickerInput_1.SingleDatePickerInput__withBorder.SingleDatePickerInput__withBorder_2 {
   border: 0.0px solid #dbdbdb;
   display: block;
 }
+
 .SingleDatePicker_1 {
   border: 0.0px solid #dbdbdb;
   display: block;
@@ -560,13 +586,13 @@ a {
  .div-user-controls {
     padding: 32px;
  }
- 
+
  .side-by-side{
     display: inline-block;
     width: 48%;
   }
 
-   
+
  .side-by-side-right{
     display: inline-block;
     width: 48%;
@@ -575,7 +601,7 @@ a {
   .div-for-charts{
     margin: 0px;
   }
-} 
+}
 
 /* width */
 ::-webkit-scrollbar {
@@ -585,19 +611,17 @@ a {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #1e1e1e !important; 
+  background: #1e1e1e !important;
   border-radius: 10px !important;
   display: block !important;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: transparent; 
+  background: transparent;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #d8d8d870 !important; 
+  background: #d8d8d870 !important;
 }
-
-
