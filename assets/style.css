@@ -467,31 +467,15 @@ a {
 
 }
 
-#selector .Select-multi-value-wrapper, .Select-menu-outer, .select-up, .is-open .Select-control{
-  max-height: 82px;
-  overflow-y: auto;
-  margin: 0px 0px -3px 0px;
-  background: #1E1E1E;
-  background-color: #1E1E1E;
-}
-
-
-
-.Select-control, .Select-menu-outer, .Select-multi-value-wrapper, .select-up, .is-open .Select-control {
-  background-color: #1E1E1E;
-  color: #d8d8d8;
-
-}
-
 #modelselector .Select-control{
   max-height: 82px;
   overflow-y: auto;
   margin: 0px 0px -3px 0px;
-  border: 0.5px solid #dbdbdb;
+  border: 0.5px solid #dbdbdb44;
 }
 
 .Select-control{
-  border: 0.5px solid #dbdbdb;
+  border: 0.5px solid #dbdbdb44;
 }
 
 .has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
